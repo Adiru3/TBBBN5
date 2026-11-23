@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тренажер захисту ЛР • ТВВВ | ХНУ Кібербезпека</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0a0d14;
+      --bg-card: #111625;
+      --bg-card-hover: #161d30;
+      --border-color: #1e293b;
+      --border-glow: rgba(56, 189, 248, 0.25);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --accent-amber: #f59e0b;
+      --accent-violet: #a855f7;
+      --code-bg: #0d111a;
+      --radius: 12px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.07) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.06) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .badge-university {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-cyan);
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .badge-university::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .controls-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .mode-switch-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 14px;
+    }
+
+    .tab-pills {
+      display: inline-flex;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .tab-btn.active {
+      background: var(--accent-cyan);
+      color: #030712;
+      box-shadow: 0 2px 10px rgba(56, 189, 248, 0.4);
+    }
+
+    .stats-counter {
+      font-size: 0.85rem;
+      font-family: 'Fira Code', monospace;
+      color: var(--text-muted);
+    }
+
+    .stats-counter span {
+      font-weight: bold;
+    }
+
+    .stats-counter .correct { color: var(--accent-emerald); }
+    .stats-counter .wrong { color: var(--accent-rose); }
+
+    .category-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .cat-btn {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 7px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .cat-btn:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      color: var(--text-main);
+    }
+
+    .cat-btn.active {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    .search-box {
+      display: none;
+      position: relative;
+      margin-top: 4px;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px 10px 38px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .quiz-view {
+      display: block;
+    }
+
+    .flashcards-view {
+      display: none;
+    }
+
+    .quiz-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .progress-bar-wrap {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .question-tag {
+      font-size: 0.75rem;
+      font-family: 'Fira Code', monospace;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      color: var(--accent-violet);
+      text-transform: uppercase;
+    }
+
+    .question-step {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-family: 'Fira Code', monospace;
+    }
+
+    .question-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 22px;
+      line-height: 1.45;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .option-btn {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      line-height: 1.45;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: var(--bg-card-hover);
+      border-color: var(--border-glow);
+      transform: translateY(-1px);
+    }
+
+    .option-letter {
+      min-width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .option-btn.selected-correct {
+      background: rgba(16, 185, 129, 0.15) !important;
+      border-color: var(--accent-emerald) !important;
+      color: #a7f3d0;
+    }
+
+    .option-btn.selected-correct .option-letter {
+      background: var(--accent-emerald);
+      color: #022c22;
+      border-color: var(--accent-emerald);
+    }
+
+    .option-btn.selected-wrong {
+      background: rgba(244, 63, 94, 0.15) !important;
+      border-color: var(--accent-rose) !important;
+      color: #fecdd3;
+    }
+
+    .option-btn.selected-wrong .option-letter {
+      background: var(--accent-rose);
+      color: #4c0519;
+      border-color: var(--accent-rose);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+      opacity: 0.85;
+    }
+
+    .explanation-box {
+      display: none;
+      background: rgba(13, 17, 26, 0.9);
+      border-left: 4px solid var(--accent-cyan);
+      border-radius: 0 8px 8px 0;
+      padding: 16px 18px;
+      margin-bottom: 22px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .explanation-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .explanation-text {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      line-height: 1.55;
+    }
+
+    .explanation-text code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #7dd3fc;
+    }
+
+    .quiz-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-action {
+      background: var(--accent-cyan);
+      color: #030712;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .btn-action:hover {
+      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .result-card {
+      display: none;
+      text-align: center;
+      padding: 36px 24px;
+    }
+
+    .result-icon {
+      font-size: 3.5rem;
+      margin-bottom: 12px;
+    }
+
+    .result-score {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 4px;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .result-status {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .result-desc {
+      color: var(--text-muted);
+      max-width: 500px;
+      margin: 0 auto 28px;
+      font-size: 0.95rem;
+    }
+
+    .flashcards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .flashcard {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .flashcard:hover {
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+
+    .fc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .fc-tag {
+      font-size: 0.7rem;
+      font-family: 'Fira Code', monospace;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .fc-question {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 14px;
+      line-height: 1.4;
+    }
+
+    .fc-btn-toggle {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--accent-cyan);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .fc-btn-toggle:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent-cyan);
+    }
+
+    .fc-answer {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border-color);
+      color: #cbd5e1;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .fc-answer code {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #7dd3fc;
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 24px 16px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 1.6rem; }
+      .quiz-card { padding: 20px 16px; }
+      .question-title { font-size: 1.1rem; }
+      .category-pills { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 6px; }
+      .cat-btn { flex-shrink: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="badge-university">Хмельницький національний університет • Спеціальність 125</div>
+      <h1>Тренажер захисту лабораторних ТВВВ</h1>
+      <p class="subtitle">Повне охоплення 5 лабораторних робіт: теорія, команди, Wireshark, Splunk SPL та питання екзаменатора</p>
+    </header>
+
+    <div class="controls-panel">
+      <div class="mode-switch-wrapper">
+        <div class="tab-pills">
+          <button class="tab-btn active" id="tab-quiz" onclick="switchMode('quiz')">
+            🎯 Режим вікторини
+          </button>
+          <button class="tab-btn" id="tab-flashcards" onclick="switchMode('flashcards')">
+            📖 Шпаргалка / Картки
+          </button>
+        </div>
+
+        <div class="stats-counter" id="stats-counter">
+          Правильно: <span class="correct" id="stat-correct">0</span> | Помилок: <span class="wrong" id="stat-wrong">0</span> | Залишилось: <span id="stat-remaining">0</span>
+        </div>
+      </div>
+
+      <div class="category-pills" id="category-pills">
+        <button class="cat-btn active" onclick="setCategory('all')">🎲 Всі теми (Мікс 52)</button>
+        <button class="cat-btn" onclick="setCategory('lab1')">🛡️ ЛР 1 (Веб Nikto/ZAP)</button>
+        <button class="cat-btn" onclick="setCategory('lab2')">⚡ ЛР 2 (Hydra & Wireshark)</button>
+        <button class="cat-btn" onclick="setCategory('lab3')">🌐 ЛР 3 (OSINT & Shodan)</button>
+        <button class="cat-btn" onclick="setCategory('lab4')">🔍 ЛР 4 (Nmap & Сканування)</button>
+        <button class="cat-btn" onclick="setCategory('lab5')">📊 ЛР 5 (Splunk & SIEM)</button>
+        <button class="cat-btn" onclick="setCategory('cross')">🎯 Підступні питання</button>
+      </div>
+
+      <div class="search-box" id="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Пошук (наприклад: hydra, drop, splunk, 5432, cookie, cve, nosniff, root)..." oninput="filterFlashcards()">
+      </div>
+    </div>
+
+    <!-- QUIZ VIEW -->
+    <div class="quiz-view" id="quiz-view">
+      <div class="quiz-card" id="quiz-card">
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="question-header">
+          <span class="question-tag" id="question-tag">ЛР №1</span>
+          <span class="question-step" id="question-step">Питання 1 з 52</span>
+        </div>
+
+        <h2 class="question-title" id="question-title">Завантаження...</h2>
+
+        <div class="options-list" id="options-list"></div>
+
+        <div class="explanation-box" id="explanation-box">
+          <div class="explanation-title">💡 Чому саме так? (Для захисту перед викладачем):</div>
+          <div class="explanation-text" id="explanation-text"></div>
+        </div>
+
+        <div class="quiz-actions">
+          <button class="btn-secondary" onclick="restartQuiz()">🔄 Скинути прогрес</button>
+          <button class="btn-action" id="btn-next" onclick="nextQuestion()" style="display: none;">
+            Наступне питання ➔
+          </button>
+        </div>
+      </div>
+
+      <div class="quiz-card result-card" id="result-card">
+        <div class="result-icon" id="result-icon">🏆</div>
+        <div class="result-score" id="result-score">100%</div>
+        <div class="result-status" id="result-status">Відмінно! Готовий до захисту на А</div>
+        <p class="result-desc" id="result-desc">Ви дали правильні відповіді на всі ключові питання екзаменатора.</p>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn-action" onclick="restartQuiz()">Спробувати ще раз</button>
+          <button class="btn-secondary" onclick="switchMode('flashcards')">Переглянути всю шпаргалку</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLASHCARDS VIEW -->
+    <div class="flashcards-view" id="flashcards-view">
+      <div class="flashcards-grid" id="flashcards-grid"></div>
+    </div>
+
+    <footer>
+      Створено для захисту циклу лабораторних робіт ТВВВ • Казимов Аділь • Кафедра кібербезпеки ХНУ
+    </footer>
+  </div>
+
+  <script>
+    // FULL EXHAUSTIVE QUESTION BANK (52 QUESTIONS ACROSS ALL 5 LABS)
+    const questionsData = [
+      // ==================== ЛР №1 (9 питань) ====================
+      {
+        id: 1,
+        lab: "lab1",
+        labName: "ЛР 1 • Веб-вразливості",
+        question: "Який заголовок або CSP-директива надійно запобігає атаці Clickjacking (UI Redressing)?",
+        options: [
+          "X-Frame-Options: SAMEORIGIN або CSP frame-ancestors",
+          "X-XSS-Protection: 1; mode=block",
+          "Access-Control-Allow-Origin: *",
+          "Strict-Transport-Security: max-age=31536000"
+        ],
+        correct: 0,
+        explanation: "Clickjacking реалізується через невидимий тег <code>&lt;iframe&gt;</code>. Заголовок <code>X-Frame-Options: SAMEORIGIN</code> або сучасна директива CSP <code>frame-ancestors 'self'</code> блокують стороннє вбудовування сторінки."
+      },
+      {
+        id: 2,
+        lab: "lab1",
+        labName: "ЛР 1 • Веб-вразливості",
+        question: "Чому сканер оцінив форму з action='https://...' на сторінці HTTP як вразливість (Insecure Form Submission)?",
+        options: [
+          "Дані форми взагалі не шифруються сервером",
+          "Зловмисник через Man-in-the-Middle (MitM) може підмінити URL форми на незахищеній сторінці ще до її відправки",
+          "HTTPS-сервер автоматично відхиляє форми з методом POST",
+          "Браузер блокує будь-які змішані форми за замовчуванням"
+        ],
+        correct: 1,
+        explanation: "Оскільки сама HTML-сторінка завантажена по відкритому HTTP, зловмисник у локальній мережі (MitM/ARP-spoofing) може підмінити атрибут <code>action</code> у вихідному коді форми до відправки даних користувачем."
+      },
+      {
+        id: 3,
+        lab: "lab1",
+        labName: "ЛР 1 • Веб-вразливості",
+        question: "Який прапорець Cookie блокує доступ клієнтського JavaScript (document.cookie) у разі XSS-атаки?",
+        options: [
+          "SameSite=Strict",
+          "Secure",
+          "HttpOnly",
+          "NoSniff"
+        ],
+        correct: 2,
+        explanation: "Прапорець <code>HttpOnly</code> забороняє клієнтським скриптам читати сесійні Cookie, унеможливлюючи викрадення активної сесії при XSS-атаках."
+      },
+      {
+        id: 4,
+        lab: "lab1",
+        labName: "ЛР 1 • Веб-вразливості",
+        question: "Чому відсутність Anti-CSRF токена у формі пошуку оцінена як Low Risk, а у формі зміни пароля це був би High/Critical?",
+        options: [
+          "Форма пошуку працює тільки через протокол UDP",
+          "Форма пошуку є idempotent (читання) і не змінює критичний стан облікового запису або баланс",
+          "Форму пошуку неможливо підробити сторонніми скриптами",
+          "Сканер OWASP ZAP не аналізує форми авторизації"
+        ],
+        correct: 1,
+        explanation: "Атака CSRF небезпечна для операцій, які змінюють стан (State-Changing Requests): зміна пароля чи переказ коштів. Пошуковий запит не змінює дані профілю, тому ризик мінімальний."
+      },
+      {
+        id: 5,
+        lab: "lab1",
+        labName: "ЛР 1 • Веб-вразливості",
+        question: "Від чого саме захищає HTTP-заголовок 'X-Content-Type-Options: nosniff'?",
+        options: [
+          "Від перехоплення трафіку у відкритих Wi-Fi мережах",
+          "Від перебору паролів brute-force",
+          "Від MIME-sniffing браузером (виконання шкідливого скрипту, замаскованого під картинку чи файл)",
+          "Від сканування утилітою Nmap"
+        ],
+        correct: 2,
+        explanation: "MIME-sniffing — це спроба браузера 'вгадати' формат файлу всупереч заголовку Content-Type. Значення <code>nosniff</code> змушує браузер суворо дотримуватися заявленого MIME-типу."
+      },
+      {
+        id: 6,
+        lab: "lab1",
+        labName: "ЛР 1 • Веб-вразливості",
+        question: "Чим небезпечний дозволений на сервері HTTP-метод TRACE (атака Cross-Site Tracing, XST)?",
+        options: [
+          "Сервер повертає клієнту надіслані заголовки у тілі відповіді, що дозволяє JS прочитати HttpOnly кукі",
+          "Дозволяє віддалено перезавантажити веб-сервер Nginx",
+          "Вимикає системний брандмауер iptables",
+          "Відкриває прямий незахищений доступ до СУБД"
+        ],
+        correct: 0,
+        explanation: "Метод TRACE ехо-відповіддю повертає HTTP-запит клієнта. Через XSS зловмисник відправляє TRACE і читає відповідь з заголовками Cookie, обходячи обмеження <code>HttpOnly</code>."
+      },
+      {
+        id: 7,
+        lab: "lab1",
+        labName: "ЛР 1 • Веб-вразливості",
+        question: "У чому полягає фундаментальна різниця в призначенні між сканерами Nikto та OWASP ZAP?",
+        options: [
+          "Nikto працює тільки під Windows, а OWASP ZAP — під Linux",
+          "Nikto орієнтований на конфігурацію веб-сервера (застаріле ПЗ, небезпечні CGI-файли), а OWASP ZAP — це DAST-сканер логіки самого веб-додатка",
+          "Nikto перебирає паролі, а ZAP сканує відкриті порти",
+          "Між цими інструментами немає жодної різниці"
+        ],
+        correct: 1,
+        explanation: "Nikto — це сканер веб-серверів на наявність небезпечних файлів, застарілих версій Apache/Nginx та заголовків. OWASP ZAP — повноцінний DAST/проксі для тестування веб-додатків на ін'єкції, логічні баги та XSS."
+      },
+      {
+        id: 8,
+        lab: "lab1",
+        labName: "ЛР 1 • Веб-вразливості",
+        question: "Чому в конфігурації Nginx при додаванні заголовків безпеки обов'язково вказують директиву 'always'?",
+        options: [
+          "Вона прискорює завантаження сайту на 50%",
+          "Щоб заголовки відправлялися навіть у відповідях із кодами помилок (4xx та 5xx), а не лише при 200 OK",
+          "Вона активує безкоштовний сертифікат Let's Encrypt",
+          "Вона забороняє кешування сторінок"
+        ],
+        correct: 1,
+        explanation: "Без директиви <code>always</code> директива Nginx <code>add_header</code> додає заголовки лише до успішних відповідей (200, 204, 301 тощо). Якщо користувач потрапить на 404 або 500, браузер не отримає CSP/X-Frame-Options!"
+      },
+      {
+        id: 9,
+        lab: "lab1",
+        labName: "ЛР 1 • Веб-вразливості",
+        question: "Який ризик створює включення стороннього JavaScript-файлу (наприклад, jquery.js з чужого домену), виявлене в ЛР №1?",
+        options: [
+          "Сервер автоматично видаляє базу даних",
+          "У разі зламу стороннього домену шкідливий код автоматично виконається у браузерах користувачів досліджуваного сайту (Supply Chain Attack)",
+          "Швидкість рендерингу CSS знижується до нуля",
+          "Браузер вимагатиме ввести пароль адміністратора"
+        ],
+        correct: 1,
+        explanation: "Це ризик ланцюжка постачання (Supply Chain Risk). Для нейтралізації необхідно використовувати локальне розміщення бібліотек або перевірку цілісності Subresource Integrity (SRI) за допомогою хешу <code>integrity='sha384-...'</code>."
+      },
+
+      // ==================== ЛР №2 (9 питань) ====================
+      {
+        id: 10,
+        lab: "lab2",
+        labName: "ЛР 2 • Hydra & Автентифікація",
+        question: "Що означає статус порту зі службою 'tcpwrapped' у звіті Nmap на вузлі 172.16.83.58?",
+        options: [
+          "Порт закритий і скидає пакети",
+          "3-стороннє TCP-рукостискання завершилося, але сервер/фаєрвол миттєво скинув з'єднання без передачі банера служби",
+          "Порт використовує квантове шифрування ключів",
+          "Служба зависла і потребує перезавантаження"
+        ],
+        correct: 1,
+        explanation: "<code>tcpwrapped</code> означає, що TCP-з'єднання було встановлено, але захисна обгортка (TCP Wrapper, Firewall, Proxy) одразу розірвала зв'язок (FIN/RST), не давши Nmap ідентифікувати сервіс."
+      },
+      {
+        id: 11,
+        lab: "lab2",
+        labName: "ЛР 2 • Hydra & Автентифікація",
+        question: "Що вказує параметр 'F=ERROR' у синтаксисі Hydra для модуля https-post-form?",
+        options: [
+          "Формат кодування вихідного словника",
+          "Кількість невдалих спроб до зупинки Hydra",
+          "Критерій невдачі (Failure): якщо рядок 'ERROR' є у відповіді сервера, спроба вважається неуспішною",
+          "Примусове завершення процесів (Force)"
+        ],
+        correct: 2,
+        explanation: "У модулі <code>https-post-form</code> маркер <code>F=</code> задає умову неуспішної авторизації. Якщо слово 'ERROR' знайдено у HTML-відповіді — пароль неправильний; якщо його немає — пароль підібрано!"
+      },
+      {
+        id: 12,
+        lab: "lab2",
+        labName: "ЛР 2 • Hydra & Автентифікація",
+        question: "Що відбулося на 16 553-й спробі брутфорсу зі словником RockYou у Лабораторній роботі №2?",
+        options: [
+          "Hydra успішно знайшла пароль адміністратора",
+          "Спрацював механізм активного захисту (WAF / Rate Limiting), який перестав приймати з'єднання та заблокував IP-адресу",
+          "Закінчилося вільне місце на диску в Kali Linux",
+          "Сервер автоматично видалив базу користувачів"
+        ],
+        correct: 1,
+        explanation: "На швидкості ~2380 спроб/хв на 16 553-й спробі спрацювала система активного захисту (WAF / Rate Limiting / Fail2ban). Сервер припинив приймати TCP-пакети SYN, змусивши потоки Hydra завершитися з помилкою."
+      },
+      {
+        id: 13,
+        lab: "lab2",
+        labName: "ЛР 2 • Hydra & Автентифікація",
+        question: "Які пакети утиліта Wireshark зафіксувала після блокування атакуючого IP цільовим сервером?",
+        options: [
+          "Пакети ICMP Redirect",
+          "Масові повторні [TCP Retransmission] через відсутність відповідей [SYN-ACK]",
+          "Постійні запити DNS Query",
+          "Пакети TLS Decryption Error"
+        ],
+        correct: 1,
+        explanation: "Фаєрвол сервера застосував правило DROP. Клієнтська ОС Kali очікувала на відповідь і за тайм-аутом надсилала повторні спроби передачі пакетів — <code>TCP Retransmission</code>."
+      },
+      {
+        id: 14,
+        lab: "lab2",
+        labName: "ЛР 2 • Hydra & Автентифікація",
+        question: "У чому відмінність дій фаєрвола DROP та REJECT з точки зору аналізу Wireshark?",
+        options: [
+          "DROP відповідає пакетом RST, а REJECT мовчки знищує пакет",
+          "DROP мовчки знищує пакети (клієнт чекає тайм-аут і шле Retransmission), а REJECT явно надсилає RST або ICMP Port Unreachable",
+          "Між цими правилами немає різниці для аналізатора",
+          "DROP працює тільки для локальної мережі"
+        ],
+        correct: 1,
+        explanation: "<code>DROP</code> змушує атакуючого марнувати час на очікування таймауту. <code>REJECT</code> одразу надсилає TCP RST або ICMP unreachable, повідомляючи клієнту про відхилення."
+      },
+      {
+        id: 15,
+        lab: "lab2",
+        labName: "ЛР 2 • Hydra & Автентифікація",
+        question: "Який дисплейний фільтр у Wireshark використовувався в ЛР №2 для ізоляції трафіку атаки на сервер?",
+        options: [
+          "tcp.port == 80 || udp.port == 53",
+          "ip.addr == 91.192.104.79 && tcp.port == 443",
+          "http.request.method == 'GET'",
+          "icmp.type == 8"
+        ],
+        correct: 1,
+        explanation: "Фільтр <code>ip.addr == 91.192.104.79 && tcp.port == 443</code> дозволив аналізувати виключно HTTPS-трафік між атакуючим хостом та цільовим сервером <code>ntsmv.khmnu.edu.ua</code>."
+      },
+      {
+        id: 16,
+        lab: "lab2",
+        labName: "ЛР 2 • Hydra & Автентифікація",
+        question: "Який мережевий пристрій було ідентифіковано в ході сканування Angry IP Scanner на хості 172.16.43.64?",
+        options: [
+          "Маршрутизатор Cisco ASA",
+          "Мережевий принтер/БФП Xerox (Host: XRX9C934E983399) з портами 80 та 443",
+          "Контролер домену Active Directory",
+          "Сервер відеоспостереження Hikvision"
+        ],
+        correct: 1,
+        explanation: "Angry IP Scanner виявив пристрій Xerox із відкритими веб-портами керування 80 та 443, що є типовим для мережевого обладнання університетського сегменту."
+      },
+      {
+        id: 17,
+        lab: "lab2",
+        labName: "ЛР 2 • Hydra & Автентифікація",
+        question: "Чому перша спроба перебору паролів до SSH для користувача npetlyak перевіряла лише 5 варіантів?",
+        options: [
+          "Hydra має ліміт у 5 спроб на безкоштовній версії",
+          "Використовувався тестовий контрольний словник passwords.txt для базової перевірки стійкості парольної політики",
+          "Сервер SSH відключився після 5 секунд роботи",
+          "Користувача npetlyak було заблоковано в Active Directory"
+        ],
+        correct: 1,
+        explanation: "Це стандартний крок тестування: спочатку перевіряються прості словники на слабкі паролі (admin, 123456 тощо). Пароль користувача npetlyak виявився стійким до базових атак."
+      },
+      {
+        id: 18,
+        lab: "lab2",
+        labName: "ЛР 2 • Hydra & Автентифікація",
+        question: "Як працює механізм динамічного захисту Fail2ban проти атак перебору?",
+        options: [
+          "Вимикає живлення сервера при підозрілій активності",
+          "Моніторить системні журнали на наявність помилок автентифікації і додає тимчасове правило блокування IP у фаєрвол (iptables/nftables)",
+          "Змінює паролі всіх користувачів на випадкові",
+          "Надсилає SMS-повідомлення кожному користувачеві"
+        ],
+        correct: 1,
+        explanation: "Fail2ban парсить логи (наприклад auth.log чи access.log). При досягненні порогу помилок (наприклад, 5 за 10 хвилин) утиліта виконує команду фаєрвола для блокування джерела на заданий час (bantime)."
+      },
+
+      // ==================== ЛР №3 (10 питань) ====================
+      {
+        id: 19,
+        lab: "lab3",
+        labName: "ЛР 3 • OSINT & Shodan",
+        question: "У чому фундаментальна перевага пасивного OSINT (Shodan, SpiderFoot) над активним скануванням?",
+        options: [
+          "Він дає змогу миттєво зламати будь-який пароль",
+          "Він не надсилає жодних прямих зондувальних пакетів на ціль і не фіксується системами виявлення вторгнень (IDS/IPS)",
+          "Пасивний OSINT гарантує 100% захист від вірусів",
+          "Він працює тільки без підключення до Інтернету"
+        ],
+        correct: 1,
+        explanation: "Пасивний OSINT агрегує дані зі сторонніх баз (Shodan, DNS, WHOIS) і не генерує трафіку до цільових серверів, що робить його абсолютно невидимим для цілі."
+      },
+      {
+        id: 20,
+        lab: "lab3",
+        labName: "ЛР 3 • OSINT & Shodan",
+        question: "Чому Shodan CLI у Kali Linux повертав помилку '403 Forbidden' при спробі пошуку?",
+        options: [
+          "API-ключ було анульовано через підозрілу активність",
+          "На безкоштовному тарифі Shodan кількість пошукових кредитів (Query Credits) дорівнює 0 для запитів через CLI",
+          "У Kali Linux не було встановлено python3",
+          "Університетський фаєрвол заблокував протокол Shodan"
+        ],
+        correct: 1,
+        explanation: "API Shodan вимагає платних Query Credits для повнотекстових запитів через CLI. Тому в роботі дослідження проводилося через Web UI та безкоштовні ендпоінти InternetDB."
+      },
+      {
+        id: 21,
+        lab: "lab3",
+        labName: "ЛР 3 • OSINT & Shodan",
+        question: "Яку критичну помилку налаштування фаєрвола Shodan виявив на вузлі 78.152.183.36 (elard2)?",
+        options: [
+          "Відкритий незахищений Telnet без пароля",
+          "Публічно відкритий у зовнішній Інтернет порт 5432 СУБД PostgreSQL",
+          "Увімкнений протокол BGP",
+          "Відкритий порт SMB (445)"
+        ],
+        correct: 1,
+        explanation: "Порт СУБД PostgreSQL (5432) був доступний для всього світу, створюючи загрозу прямого перебору паролів та компрометації баз даних університету."
+      },
+      {
+        id: 22,
+        lab: "lab3",
+        labName: "ЛР 3 • OSINT & Shodan",
+        question: "Скільки критичних вразливостей рівня Critical (CVSS 9.0–9.8) Shodan зафіксував на сервері 78.152.183.38 (retrain.km.ua)?",
+        options: [
+          "Жодної",
+          "3 вразливості типу XSS",
+          "25 критичних вразливостей (RCE, SSRF, Request Smuggling)",
+          "Більше 500 критичних вразливостей"
+        ],
+        correct: 2,
+        explanation: "Через застаріле ПЗ Apache 2.4.37 та OpenSSL 1.1.1k Shodan виявив 25 вразливостей найвищої критичності, включно з можливістю повного захоплення контролю над сервером (RCE)."
+      },
+      {
+        id: 23,
+        lab: "lab3",
+        labName: "ЛР 3 • OSINT & Shodan",
+        question: "Який вектор загрози створює виявлена вразливість CVE-2021-44790 (CVSS 9.8) у модулі mod_lua?",
+        options: [
+          "Витік паролів через незахищені Cookie",
+          "Віддалене виконання довільного коду (RCE) через переповнення буфера пам'яті під час парсингу multipart-запитів",
+          "Відмову в обслуговуванні протоколу DNS",
+          "Зміну кольору сторінки сайту"
+        ],
+        correct: 1,
+        explanation: "Функція <code>r:parsebody()</code> у mod_lua містить переповнення буфера. Спеціально сформований multipart POST-запит дозволяє віддалено виконати системний код з правами процесу Apache."
+      },
+      {
+        id: 24,
+        lab: "lab3",
+        labName: "ЛР 3 • OSINT & Shodan",
+        question: "Що спричиняє вразливість CVE-2021-3711 (CVSS 9.8) у бібліотеці OpenSSL 1.1.1k?",
+        options: [
+          "Переповнення буфера купи (Heap Buffer Overflow) на 62 байти при дешифруванні SM2, що призводить до RCE",
+          "Підміну відкритого ключа RSA",
+          "Випадкове вимкнення шифрування TLS 1.3",
+          "Витік паролів користувачів у консоль сервера"
+        ],
+        correct: 0,
+        explanation: "Функція <code>EVP_PKEY_decrypt()</code> під час обробки шифротекстів алгоритму SM2 переповнює виділений буфер на 62 байти, що дозволяє перезаписати пам'ять купи та досягти виконання коду."
+      },
+      {
+        id: 25,
+        lab: "lab3",
+        labName: "ЛР 3 • OSINT & Shodan",
+        question: "У чому небезпека SPF-запису 'v=spf1 include:_spf.google.com ~all' за відсутності політики DMARC?",
+        options: [
+          "Листи взагалі не будуть доставлятися",
+          "Механізм SoftFail (~all) дозволяє шахраям надсилати фішингові листи від імені університету (Email Spoofing)",
+          "Сервер автоматично відхиляє будь-які вхідні повідомлення",
+          "Домен автоматично видаляється з реєстру"
+        ],
+        correct: 1,
+        explanation: "Директива <code>~all</code> (SoftFail) лише позначає сторонні листи як підозрілі, але не блокує їх. Зловмисники можуть надсилати фішинг від імені @khmnu.edu.ua, проходячи спам-фільтри."
+      },
+      {
+        id: 26,
+        lab: "lab3",
+        labName: "ЛР 3 • OSINT & Shodan",
+        question: "Як працює ешелонований захист хоста 151.101.2.133 (Fastly CDN + DataDome WAF)?",
+        options: [
+          "Використовує тільки локальні файли конфігурації",
+          "Маскує реальний Origin IP за мережею Anycast CDN, а WAF DataDome відсікає сканери кодом 403 за JA3/JA4 відбитками на рівні L7",
+          "Повністю вимикає протокол HTTPS",
+          "Перенаправляє всі запити в даркнет"
+        ],
+        correct: 1,
+        explanation: "Fastly CDN повністю ізолює реальний сервер від Інтернету, а поведінковий L7 WAF DataDome аналізує TLS-відбитки (JA3/JA4) та блокує автоматизовані сканери на стадії розвідки."
+      },
+      {
+        id: 27,
+        lab: "lab3",
+        labName: "ЛР 3 • OSINT & Shodan",
+        question: "До чого призвів витік посилання на тестове середовище 'kiis-dev', знайдений у коді сторінки кафедри?",
+        options: [
+          "До негайного видалення сайту хостинг-провайдером",
+          "До виникнення змішаного контенту (Mixed Content HTTP/HTTPS) та розкриття внутрішнього менш захищеного dev-середовища",
+          "До зависання операційної системи Windows",
+          "До активації режиму підвищеної безпеки"
+        ],
+        correct: 1,
+        explanation: "Це проблема Dev-Leak: браузери блокують незахищені скрипти з dev-сервера (Mixed Content), а зловмисники отримують адресу тестового вузла, де зазвичай увімкнений дебаг та слабкі паролі."
+      },
+      {
+        id: 28,
+        lab: "lab3",
+        labName: "ЛР 3 • OSINT & Shodan",
+        question: "Що означає оцінка вразливості за шкалою CVSS v3.1 з балом 9.8 (Critical)?",
+        options: [
+          "Вразливість вимагає фізичного доступу до материнської плати сервера",
+          "Мережевий вектор (AV:N), низька складність (AC:L), не вимагає привілеїв (PR:N) і взаємодії з користувачем (UI:N), спричиняє максимальний вплив на C, I, A",
+          "Вразливість не несе жодної реальної загрози",
+          "Вразливість стосується виключно дизайну сайту"
+        ],
+        correct: 1,
+        explanation: "Бали 9.0–10.0 є максимальним рівнем (Critical). 9.8 означає, що будь-який віддалений атакувальник з Інтернету без автентифікації може автоматизовано експлуатувати баг із катастрофічними наслідками."
+      },
+
+      // ==================== ЛР №4 (8 питань) ====================
+      {
+        id: 29,
+        lab: "lab4",
+        labName: "ЛР 4 • Nmap & Сканування",
+        question: "У чому головна відмінність TCP Connect сканування (-sT) від SYN Stealth сканування (-sS)?",
+        options: [
+          "-sT вимагає прав root, а -sS працює під звичайним користувачем",
+          "-sT встановлює повне 3-стороннє рукостискання через виклик connect(), а -sS надсилає RST після SYN-ACK і менш помітний у логах додатків",
+          "-sT сканує тільки UDP-порти",
+          "-sS передає паролі у відкритому вигляді"
+        ],
+        correct: 1,
+        explanation: "<code>-sT</code> викликає штатний сокет ОС і завершує з'єднання, фіксуючись у журналах веб-сервера. <code>-sS</code> є напіввідкритим (half-open): надсилає сирий RST після отримання SYN-ACK, потребує прав root."
+      },
+      {
+        id: 30,
+        lab: "lab4",
+        labName: "ЛР 4 • Nmap & Сканування",
+        question: "Як Nmap здійснює виявлення активних хостів (Host Discovery, -sn) у межах ЛОКАЛЬНОГО сегменту Ethernet?",
+        options: [
+          "Використовує виключно запити DNS",
+          "Надсилає ARP-запити, оскільки їх неможливо заблокувати звичайним брандмауером ОС",
+          "Відправляє потік UDP-пакетів на порт 53",
+          "Здійснює запит до реєстру Windows"
+        ],
+        correct: 1,
+        explanation: "У локальній мережі Nmap надсилає ARP who-has пакети. Будь-який увімкнений хост зобов'язаний відповісти своїм MAC-адресом на канальному рівні L2, навіть якщо всі порти закриті фаєрволом."
+      },
+      {
+        id: 31,
+        lab: "lab4",
+        labName: "ЛР 4 • Nmap & Сканування",
+        question: "Як Nmap визначає точну версію служби (-sV), якщо служба не повертає текстовий банер вітання?",
+        options: [
+          "Вгадує за номером порту з таблиці стандартних сервісів",
+          "Надсилає серію спеціальних зондів (probes) з бази nmap-service-probes і порівнює відповіді з регулярними виразами",
+          "Виконує декомпіляцію бінарних файлів сервера",
+          "Зчитує дані з бази GitHub"
+        ],
+        correct: 1,
+        explanation: "Nmap відправляє послідовні probe-пакети з бази <code>nmap-service-probes</code> і класифікує отримані байти за допомогою тисяч сигнатур регулярних виразів."
+      },
+      {
+        id: 32,
+        lab: "lab4",
+        labName: "ЛР 4 • Nmap & Сканування",
+        question: "На чому базується метод визначення операційної системи (-O) в утиліті Nmap?",
+        options: [
+          "На читанні файлу /etc/os-release через Telnet",
+          "На аналізі тонкощів мережевого стеку TCP/IP (генерація ISN, TCP Options, Window Size, реакція на нестандартні прапорці)",
+          "На швидкості пінгу хоста",
+          "На доменному імені комп'ютера"
+        ],
+        correct: 1,
+        explanation: "Різні ОС мають відмінності в реалізації TCP/IP (початковий Sequence Number, порядок опцій MSS/SACK, обробка помилкових прапорців). Nmap порівнює відбиток із базою <code>nmap-os-db</code>."
+      },
+      {
+        id: 33,
+        lab: "lab4",
+        labName: "ЛР 4 • Nmap & Сканування",
+        question: "Що насправді робить опція маскування Nmap '-D RND:10'?",
+        options: [
+          "Повністю шифрує реальну IP-адресу через TOR",
+          "Генерує пакети від 11 різних IP-адрес одночасно (10 випадкових обманок + 1 реальна IP), перемішуючи їх для ускладнення виявлення атакуючого",
+          "Змінює MAC-адрес на кожному пакеті",
+          "Знищує системні логи цілі"
+        ],
+        correct: 1,
+        explanation: "Decoy-сканування шле трафік від імені випадкових IP-адрес. Реальна IP сканера присутня серед них, але адміністратор цілі бачить масований потік від багатьох хостів і не може легко визначити справжнє джерело."
+      },
+      {
+        id: 34,
+        lab: "lab4",
+        labName: "ЛР 4 • Nmap & Сканування",
+        question: "Що означає стан порту 'filtered' у звіті Nmap?",
+        options: [
+          "Порт відкритий і очищений від вразливостей",
+          "Пакети не доходять або блокуються фаєрволом, тому Nmap не може встановити, чи порт відкритий, чи закритий",
+          "Порт призначений тільки для проксі",
+          "Порт закритий ОС"
+        ],
+        correct: 1,
+        explanation: "Статус <code>filtered</code> вказує на наявність брандмауера чи роутера, який знищує пакети за правилом DROP або повертає ICMP unreachable."
+      },
+      {
+        id: 35,
+        lab: "lab4",
+        labName: "ЛР 4 • Nmap & Сканування",
+        question: "Яку службу та операційну систему Nmap виявив на досліджуваному вузлі 172.20.40.10 у ЛР №4?",
+        options: [
+          "Nginx 1.20 на Linux Ubuntu",
+          "Apache 2.4.51 на порті 80, операційна система — Windows",
+          "IIS 10.0 на Windows Server 2019",
+          "OpenSSH 8.9 на FreeBSD"
+        ],
+        correct: 1,
+        explanation: "Команди <code>-sV</code> та <code>-O</code> ідентифікували веб-сервер Apache 2.4.51 та операційну систему сімейства Windows."
+      },
+      {
+        id: 36,
+        lab: "lab4",
+        labName: "ЛР 4 • Nmap & Сканування",
+        question: "У чому полягає призначення графічної оболонки Zenmap над консольним Nmap?",
+        options: [
+          "Zenmap зламує WPA2 паролі автоматично",
+          "Zenmap надає графічний інтерфейс, інтерактивну карту топології мережі (Topology), збереження профілів сканування та порівняння результатів",
+          "Zenmap сканує мережу без використання пакетів",
+          "Zenmap замінює операційну систему"
+        ],
+        correct: 1,
+        explanation: "Zenmap — це офіційний GUI для Nmap. Він дозволяє візуалізувати топологію зв'язків між вузлами мережі, зберігати профілі налаштувань та порівнювати дифи сканувань."
+      },
+
+      // ==================== ЛР №5 (9 питань) ====================
+      {
+        id: 37,
+        lab: "lab5",
+        labName: "ЛР 5 • Splunk & SIEM",
+        question: "Яке призначення порту 8089/tcp у комплексі Splunk Enterprise і чому він несе ризик?",
+        options: [
+          "Це порт для онлайн-довідки",
+          "Це керуючий REST API інтерфейс демона splunkd, відкриття якого в публічну мережу дозволяє зловмиснику віддалено адмініструвати систему та виконувати команди",
+          "Це порт резервного копіювання",
+          "Це порт виключно для Oracle DB"
+        ],
+        correct: 1,
+        explanation: "Порт <code>8089</code> використовується для кластеризації, розгортання додатків та управління через REST API. Якщо він відкритий назовні, це створює критичну загрозу віддаленого контролю над Splunk."
+      },
+      {
+        id: 38,
+        lab: "lab5",
+        labName: "ЛР 5 • Splunk & SIEM",
+        question: "Для чого у пошуковому запиті SPL використовується команда 'mvexpand line' після 'rex'?",
+        options: [
+          "Для шифрування вихідних текстових рядків",
+          "Для розбиття масиву значень, знайдених регулярним виразом, на окремі незалежні події (рядки таблиці)",
+          "Для видалення помилкових записів із бази",
+          "Для конвертації чисел у шістнадцятковий формат"
+        ],
+        correct: 1,
+        explanation: "Коли регулярний вираз <code>rex</code> знаходить кілька відкритих портів у тексті, вони зберігаються як масив. <code>mvexpand</code> розгортає кожен елемент масиву в окремий рядок для статистики."
+      },
+      {
+        id: 39,
+        lab: "lab5",
+        labName: "ЛР 5 • Splunk & SIEM",
+        question: "Яка функція команди 'stats' підраховує кількість УНІКАЛЬНИХ відкритих портів у звіті?",
+        options: [
+          "stats sum(port)",
+          "stats avg(port)",
+          "stats dc(port)  [distinct count]",
+          "stats mode(port)"
+        ],
+        correct: 2,
+        explanation: "Функція <code>dc(field)</code> (Distinct Count) обчислює саме кількість унікальних значень, відкидаючи повтори (у роботі: <code>stats dc(port) as Total_Open_Ports</code> повернуло 2)."
+      },
+      {
+        id: 40,
+        lab: "lab5",
+        labName: "ЛР 5 • Splunk & SIEM",
+        question: "Чому у сучасних версіях Kali Linux були відсутні традиційні файли логів /var/log/auth.log?",
+        options: [
+          "Система була скомпрометована хакером, який потер логи",
+          "За замовчуванням логування переведено на службу systemd-journald, яка зберігає бінарні журнали подій",
+          "У системі не налаштовано часовий пояс",
+          "Логування вимкнено через брак місця на диску"
+        ],
+        correct: 1,
+        explanation: "Сучасні дистрибутиви systemd використовують <code>systemd-journald</code> замість застарілого rsyslog. Журнали зберігаються у двійковому форматі і переглядаються через <code>journalctl</code>."
+      },
+      {
+        id: 41,
+        lab: "lab5",
+        labName: "ЛР 5 • Splunk & SIEM",
+        question: "Як у системі Splunk виявити спробу підбору паролів (SSH Brute-force) за допомогою запиту SPL?",
+        options: [
+          "index=main | search 'happy user' | eval status=ok",
+          "index=main ('Failed password' OR 'Invalid user') earliest=-15m | stats count by src_ip | where count > 5",
+          "index=main ssh_port=22 | delete",
+          "index=main | alert trigger all"
+        ],
+        correct: 1,
+        explanation: "Ми шукаємо події невдалої автентифікації за певний інтервал часу (<code>earliest=-15m</code>), групуємо їх за IP-адресою джерела та встановлюємо поріг спрацювання (<code>where count > 5</code>)."
+      },
+      {
+        id: 42,
+        lab: "lab5",
+        labName: "ЛР 5 • Splunk & SIEM",
+        question: "Яка різниця між Scheduled Alert та Real-Time Alert у Splunk?",
+        options: [
+          "Scheduled спрацьовує тільки вночі, а Real-Time — тільки вдень",
+          "Scheduled виконується періодично за розкладом (менше навантаження), а Real-Time безперервно сканує потік подій у пам'яті (миттєва реакція, але високе навантаження на CPU)",
+          "Scheduled доступний лише в платній версії",
+          "Real-Time блокує роботу веб-сервера"
+        ],
+        correct: 1,
+        explanation: "Scheduled Alert виконується кроном з інтервалом (наприклад раз на хвилину) і зберігає ресурси. Real-Time Alert висить фоновим процесом, створюючи високе постійне навантаження на систему."
+      },
+      {
+        id: 43,
+        lab: "lab5",
+        labName: "ЛР 5 • Splunk & SIEM",
+        question: "Який потенційний ризик безпеки було виявлено під час перевірки процесів Splunk (ps aux | grep splunk)?",
+        options: [
+          "Процеси Splunk взагалі не були запущені",
+          "Процеси splunkd та splunk-supervisor функціонували з привілеями суперкористувача root, що порушує принцип найменших привілеїв",
+          "Splunk споживав 100% мережевого каналу",
+          "Splunk надсилав паролі в незашифрованому вигляді"
+        ],
+        correct: 1,
+        explanation: "Запуск демона від імені <code>root</code> несе ризик повної компрометації ОС у разі виявлення вразливості в самому Splunk. Рекомендовано запускати сервіс від окремого виділеного користувача <code>splunk</code>."
+      },
+      {
+        id: 44,
+        lab: "lab5",
+        labName: "ЛР 5 • Splunk & SIEM",
+        question: "Що показала перевірка SSL/TLS-сертифіката служби Splunkd за допомогою 'openssl s_client'?",
+        options: [
+          "Сертифікат видано довіреним центром Let's Encrypt",
+          "Використовується за замовчуванням самопідписаний сертифікат (SplunkServerDefaultCert) з RSA 2048 біт та TLSv1.3",
+          "Шифрування повністю відсутнє",
+          "Сертифікат прострочений на 10 років"
+        ],
+        correct: 1,
+        explanation: "За замовчуванням Splunk генерує самопідписаний сертифікат <code>SplunkServerDefaultCert</code>. Для виробничого середовища обов'язково встановлювати валідний сертифікат корпоративного CA."
+      },
+      {
+        id: 45,
+        lab: "lab5",
+        labName: "ЛР 5 • Splunk & SIEM",
+        question: "Яка команда SPL використовувалася для локалізації та перейменування полів таблиці?",
+        options: [
+          "change field=name",
+          "rename port as 'Порт', Protocol as 'Протокол', Service as 'Служба'",
+          "translate en to uk",
+          "alias port='Порт'"
+        ],
+        correct: 1,
+        explanation: "Команда <code>rename original_field as 'Нова назва'</code> дозволяє перейменувати поля для формування читабельних звітів та фінальних таблиць."
+      },
+
+      // ==================== ПІДСТУПНІ ПЕРЕХРЕСНІ ПИТАННЯ (7 питань) ====================
+      {
+        id: 46,
+        lab: "cross",
+        labName: "🎯 Підступні питання",
+        question: "Чому Shodan у ЛР №3 одразу показав 25 вразливостей Critical CVE, а сканери Nikto/ZAP у ЛР №1 знайшли лише Medium і Low?",
+        options: [
+          "Shodan завжди вигадує вразливості",
+          "Shodan пасивно співставив застарілі банери ПЗ цілі (Apache 2.4.37, OpenSSL 1.1.1k) з базою CVE, тоді як цілями ЛР №1 були сучасні версії Nginx без старих бінарних багів",
+          "Nikto та ZAP не призначені для пошуку критичних вразливостей",
+          "Викладач вимкнув модулі сканування"
+        ],
+        correct: 1,
+        explanation: "Сервер <code>retrain.km.ua</code> роками не оновлювався і мав старі компоненти з публічними CVE. У ЛР №1 сканувалися актуальні версії Nginx, де проблеми стосувалися конфігурацій заголовків безпеки."
+      },
+      {
+        id: 47,
+        lab: "cross",
+        labName: "🎯 Підступні питання",
+        question: "Чому сервер у ЛР №2 витримав 16 553 спроби перебору перед блокуванням, а в ЛР №5 поріг алерту було встановлено на 3 спроби?",
+        options: [
+          "У ЛР №2 захист був вимкнений вручну",
+          "У ЛР №2 спрацював мережевий Rate Limiting на L4/L7 за швидкістю з'єднань, а в ЛР №5 моделювалася політика безпеки додатку (Account Lockout Policy) за кількістю невдалих спроб",
+          "У ЛР №2 використовувався потужніший комп'ютер",
+          "Hydra передавала неправильні коди"
+        ],
+        correct: 1,
+        explanation: "Rate Limiting на стороні WAF/Firewall захищає від перевантаження каналу за одиницю часу, а політика блокування акаунту (Account Lockout) у SIEM реагує на поодинокі спроби підбору пароля конкретного користувача."
+      },
+      {
+        id: 48,
+        lab: "cross",
+        labName: "🎯 Підступні питання",
+        question: "Якщо сайт захищений сучасним WAF, навіщо налаштовувати заголовки CSP, HSTS та прапорці Cookie?",
+        options: [
+          "Це необов'язково і робиться лише формально",
+          "Це реалізація принципу глибокоешелонованого захисту (Defense in Depth): якщо атакувальник обійде WAF, заголовки захистять користувача безпосередньо у браузері",
+          "WAF не вміє обробляти HTTPS",
+          "Заголовки потрібні лише для пошукової оптимізації SEO"
+        ],
+        correct: 1,
+        explanation: "Defense in Depth передбачає багаторівневий захист. WAF фільтрує вхідні ін'єкції на периметрі, а заголовки та прапорці Cookie блокують XSS, Clickjacking та викрадення сесій на рівні клієнтського браузера."
+      },
+      {
+        id: 49,
+        lab: "cross",
+        labName: "🎯 Підступні питання",
+        question: "Чи є пасивна розвідка з використанням Shodan та SpiderFoot несанкціонованим втручанням (порушенням закону)?",
+        options: [
+          "Так, це злочин за статтею 361 КК України в будь-якому випадку",
+          "Ні, оскільки використовується лише публічно проіндексована інформація з відкритих джерел без прямого несанкціонованого впливу на комп'ютерну систему",
+          "Так, але тільки для закордонних хостів",
+          "Закон забороняє будь-яке використання Linux"
+        ],
+        correct: 1,
+        explanation: "Пасивний OSINT працює з відкритими реєстрами та кешами. Прямого зондування чи експлуатації вразливостей не відбувається, тому це законна аналітична діяльність (на відміну від неавторизованого активного брутфорсу)."
+      },
+      {
+        id: 50,
+        lab: "cross",
+        labName: "🎯 Підступні питання",
+        question: "Чому сканування Nmap з параметром '-p-' триває у десятки разів довше за звичайне сканування без параметрів?",
+        options: [
+          "Параметр -p- вмикає примусове шифрування трафіку",
+          "За замовчуванням Nmap перевіряє лише 1000 найпопулярніших портів, а параметр -p- змушує зондувати всі 65 535 можливих портів TCP",
+          "Параметр -p- додає паузу в 10 секунд перед кожним пакетом",
+          "Тому що сканування виконується через супутниковий зв'язок"
+        ],
+        correct: 1,
+        explanation: "За замовчуванням Nmap сканує топ-1000 портів. Опція <code>-p-</code> (діапазон 1-65535) змушує сканер відправляти пакети на абсолютно всі 65 535 портів, збільшуючи обсяг роботи у 65 разів."
+      },
+      {
+        id: 51,
+        lab: "cross",
+        labName: "🎯 Підступні питання",
+        question: "Який механізм дозволив виявити прихований тестовий піддомен 'kiis-dev' під час виконання ЛР №3?",
+        options: [
+          "Брутфорс піддоменів за словником з 10 млн слів",
+          "SpiderFoot пасивно спарсив відкритий вихідний код HTML-сторінки продакшн-сайту кафедри, де розробники залишили прямі посилання на тестовий сервер",
+          "Злом пошти системного адміністратора",
+          "Запит до бази даних поліції"
+        ],
+        correct: 1,
+        explanation: "Це класичний витік Dev-Leak: розробники під час верстки підключили скрипти та картинки з локального dev-сервера. SpiderFoot просто виявив ці прямі URL-посилання у вихідному коді сторінки."
+      },
+      {
+        id: 52,
+        lab: "cross",
+        labName: "🎯 Підступні питання",
+        question: "У чому небезпека аварійного статусу сервера HTTP 503 Service Unavailable на вузлі retrain.km.ua?",
+        options: [
+          "Сервер самостійно видалив операційну систему",
+          "Веб-додаток перебуває в стані збою або вичерпання ресурсів бекенду, що в поєднанні з 25 Critical CVE свідчить про повну відсутність системного адміністрування та критичну загрозу зламу",
+          "Код 503 свідчить про успішне проходження тестування на проникнення",
+          "Цей статус означає планове оновлення дизайну сайту"
+        ],
+        correct: 1,
+        explanation: "Код 503 вказує на відмову обробника (PHP/uWSGI/БД). Непрацездатний сервіс у комбінації з RCE-вразливостями у ядрі веб-сервера сигналізує про занедбаність системи та легкість її компрометації."
+      }
+    ];
+
+    // APPLICATION STATE
+    let currentCategory = 'all';
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let scoreCorrect = 0;
+    let scoreWrong = 0;
+    let currentMode = 'quiz';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initQuiz();
+      renderFlashcards();
+    });
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      const pills = document.querySelectorAll('.cat-btn');
+      pills.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      if (currentMode === 'quiz') {
+        initQuiz();
+      } else {
+        renderFlashcards();
+      }
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      const quizView = document.getElementById('quiz-view');
+      const fcView = document.getElementById('flashcards-view');
+      const searchBox = document.getElementById('search-box');
+      const statsCounter = document.getElementById('stats-counter');
+      const tabQuiz = document.getElementById('tab-quiz');
+      const tabFc = document.getElementById('tab-flashcards');
+
+      if (mode === 'quiz') {
+        quizView.style.display = 'block';
+        fcView.style.display = 'none';
+        searchBox.style.display = 'none';
+        statsCounter.style.display = 'block';
+        tabQuiz.classList.add('active');
+        tabFc.classList.remove('active');
+        initQuiz();
+      } else {
+        quizView.style.display = 'none';
+        fcView.style.display = 'block';
+        searchBox.style.display = 'block';
+        statsCounter.style.display = 'none';
+        tabQuiz.classList.remove('active');
+        tabFc.classList.add('active');
+        renderFlashcards();
+      }
+    }
+
+    function initQuiz() {
+      if (currentCategory === 'all') {
+        currentQuestions = [...questionsData];
+      } else {
+        currentQuestions = questionsData.filter(q => q.lab === currentCategory);
+      }
+
+      currentQuestions.sort(() => Math.random() - 0.5);
+
+      currentIndex = 0;
+      scoreCorrect = 0;
+      scoreWrong = 0;
+
+      document.getElementById('quiz-card').style.display = 'block';
+      document.getElementById('result-card').style.display = 'none';
+
+      updateStats();
+      displayQuestion();
+    }
+
+    function displayQuestion() {
+      if (currentIndex >= currentQuestions.length) {
+        showResults();
+        return;
+      }
+
+      const q = currentQuestions[currentIndex];
+      const progressPercent = ((currentIndex) / currentQuestions.length) * 100;
+      document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+      document.getElementById('question-tag').innerText = q.labName;
+      document.getElementById('question-step').innerText = `Питання ${currentIndex + 1} з ${currentQuestions.length}`;
+      document.getElementById('question-title').innerText = q.question;
+
+      const optionsContainer = document.getElementById('options-list');
+      optionsContainer.innerHTML = '';
+      const letters = ['A', 'B', 'C', 'D'];
+
+      q.options.forEach((optText, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `
+          <div class="option-letter">${letters[index]}</div>
+          <div>${optText}</div>
+        `;
+        btn.onclick = () => selectOption(index);
+        optionsContainer.appendChild(btn);
+      });
+
+      document.getElementById('explanation-box').style.display = 'none';
+      document.getElementById('btn-next').style.display = 'none';
+
+      updateStats();
+    }
+
+    function selectOption(selectedIndex) {
+      const q = currentQuestions[currentIndex];
+      const buttons = document.querySelectorAll('.option-btn');
+
+      buttons.forEach(btn => btn.disabled = true);
+
+      if (selectedIndex === q.correct) {
+        buttons[selectedIndex].classList.add('selected-correct');
+        scoreCorrect++;
+      } else {
+        buttons[selectedIndex].classList.add('selected-wrong');
+        buttons[q.correct].classList.add('selected-correct');
+        scoreWrong++;
+      }
+
+      const expBox = document.getElementById('explanation-box');
+      document.getElementById('explanation-text').innerHTML = q.explanation;
+      expBox.style.display = 'block';
+
+      document.getElementById('btn-next').style.display = 'inline-flex';
+      updateStats();
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      displayQuestion();
+    }
+
+    function updateStats() {
+      document.getElementById('stat-correct').innerText = scoreCorrect;
+      document.getElementById('stat-wrong').innerText = scoreWrong;
+      const remaining = Math.max(0, currentQuestions.length - currentIndex);
+      document.getElementById('stat-remaining').innerText = remaining;
+    }
+
+    function showResults() {
+      document.getElementById('quiz-card').style.display = 'none';
+      const resultCard = document.getElementById('result-card');
+      resultCard.style.display = 'block';
+
+      const total = currentQuestions.length;
+      const percent = Math.round((scoreCorrect / total) * 100);
+
+      document.getElementById('result-score').innerText = `${percent}%`;
+
+      const icon = document.getElementById('result-icon');
+      const status = document.getElementById('result-status');
+      const desc = document.getElementById('result-desc');
+
+      if (percent >= 90) {
+        icon.innerText = '🛡️';
+        status.innerText = 'Блискучий результат! Оцінка: А (90-100)';
+        desc.innerText = 'Ви досконало володієте всіма поняттями, інструментами (Nmap, Hydra, Shodan, Splunk) та готові відповідати на будь-які запитання комісії!';
+      } else if (percent >= 75) {
+        icon.innerText = '⚡';
+        status.innerText = 'Добре! Оцінка: В/С (75-89)';
+        desc.innerText = 'Ви добре розумієте хід лабораторних робіт. Рекомендуємо заглянути у шпаргалку та закріпити підступні питання.';
+      } else {
+        icon.innerText = '⚠️';
+        status.innerText = 'Потрібно повторити матеріал';
+        desc.innerText = 'Рекомендуємо переглянути режим «Шпаргалка», ознайомитися з докладними поясненнями та пройти вікторину ще раз.';
+      }
+    }
+
+    function restartQuiz() {
+      initQuiz();
+    }
+
+    function renderFlashcards(filteredData = null) {
+      const container = document.getElementById('flashcards-grid');
+      container.innerHTML = '';
+
+      let dataToRender = filteredData;
+      if (!dataToRender) {
+        if (currentCategory === 'all') {
+          dataToRender = [...questionsData];
+        } else {
+          dataToRender = questionsData.filter(q => q.lab === currentCategory);
+        }
+      }
+
+      if (dataToRender.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 40px;">Нічого не знайдено за вашим запитом.</div>`;
+        return;
+      }
+
+      dataToRender.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'flashcard';
+        const correctOptionText = item.options[item.correct];
+
+        card.innerHTML = `
+          <div class="fc-header">
+            <span class="fc-tag">${item.labName}</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-family: monospace;">#${item.id}</span>
+          </div>
+          <div class="fc-question">${item.question}</div>
+          <button class="fc-btn-toggle" onclick="toggleFlashcard(${item.id})">
+            <span>👁️</span> <span id="fc-btn-text-${item.id}">Показати відповідь</span>
+          </button>
+          <div class="fc-answer" id="fc-ans-${item.id}">
+            <div style="color: var(--accent-emerald); font-weight: 700; margin-bottom: 8px;">
+              ✓ Правильна відповідь: ${correctOptionText}
+            </div>
+            <div>${item.explanation}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function toggleFlashcard(id) {
+      const ans = document.getElementById(`fc-ans-${id}`);
+      const btnText = document.getElementById(`fc-btn-text-${id}`);
+
+      if (ans.style.display === 'block') {
+        ans.style.display = 'none';
+        btnText.innerText = 'Показати відповідь';
+      } else {
+        ans.style.display = 'block';
+        btnText.innerText = 'Сховати відповідь';
+      }
+    }
+
+    function filterFlashcards() {
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+
+      let baseList = (currentCategory === 'all') 
+        ? questionsData 
+        : questionsData.filter(q => q.lab === currentCategory);
+
+      if (!query) {
+        renderFlashcards(baseList);
+        return;
+      }
+
+      const filtered = baseList.filter(item => {
+        return item.question.toLowerCase().includes(query) ||
+               item.explanation.toLowerCase().includes(query) ||
+               item.options.some(opt => opt.toLowerCase().includes(query));
+      });
+
+      renderFlashcards(filtered);
+    }
+  </script>
+</body>
+</html>
